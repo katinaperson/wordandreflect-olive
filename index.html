@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bible Journal">
+<link rel="manifest" href="manifest.json">
+<title>Word & Reflect</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:      #FFFFFF;
+  --bg:         #F8F6F3;
+  --bg2:        #F2EDE8;
+  --border:     #E8E2DA;
+  --border-lt:  #F0EBE4;
+  --ink:        #2A2420;
+  --ink-md:     #6B5E56;
+  --ink-lt:     #A0928A;
+  --rose:       #5C7A45;
+  --rose-pale:  #EBF0E6;
+  --rose-lt:    #A8C490;
+  --gold:       #B8975A;
+  --gold-pale:  #F9F3E8;
+  --gold-lt:    #D4B896;
+}
+[data-theme="dark"] {
+  --white:     #1A1614;
+  --bg:        #141210;
+  --bg2:       #1E1814;
+  --border:    #2E2620;
+  --border-lt: #261E1A;
+  --ink:       #F0E8E0;
+  --ink-md:    #C8B8A8;
+  --ink-lt:    #8A7870;
+  --rose:      #7AA860;
+  --rose-pale: #1A2A14;
+  --rose-lt:   #1A2E10;
+  --gold:      #C9A96E;
+  --gold-pale: #2A2010;
+  --gold-lt:   #6A5030;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--ink);font-weight:300;}
+
+/* ── DESKTOP LAYOUT ── */
+#app-desktop{display:flex;height:100vh;overflow:hidden;}
+#app-mobile{display:none;}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:240px;min-width:240px;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  height:100vh;position:sticky;top:0;overflow-y:auto;
+}
+.sb-top{padding:28px 22px 22px;border-bottom:1px solid var(--border);}
+.sb-dots{color:var(--rose);font-size:0.7rem;letter-spacing:10px;opacity:0.4;margin-bottom:10px;}
+.sb-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.4rem;font-weight:400;color:var(--ink);line-height:1.15;margin-bottom:6px;
+}
+.sb-name em{font-style:italic;color:var(--rose);font-weight:300;}
+.sb-tagline{font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-lt);}
+.sb-nav{flex:1;padding:16px 12px;}
+.sb-btn{
+  width:100%;display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-radius:6px;border:none;
+  background:transparent;
+  border-left:3px solid transparent;
+  cursor:pointer;margin-bottom:3px;
+  transition:all 0.15s;text-align:left;
+  font-family:'Jost',sans-serif;
+}
+.sb-btn:hover{background:var(--rose-pale);}
+.sb-btn.active{background:var(--rose-pale);border-left-color:var(--rose);}
+.sb-icon{font-size:1.05rem;width:24px;text-align:center;flex-shrink:0;}
+.sb-lbl{font-size:0.78rem;font-weight:400;color:var(--ink-md);letter-spacing:0.02em;margin-bottom:1px;}
+.sb-btn.active .sb-lbl{font-weight:500;color:var(--rose);}
+.sb-sub{font-size:0.58rem;color:var(--ink-lt);letter-spacing:0.06em;}
+.sb-footer{padding:14px 18px;border-top:1px solid var(--border);}
+.sb-footer-line{width:32px;height:1px;background:linear-gradient(90deg,var(--rose),var(--gold));margin-bottom:10px;}
+.sb-footer-txt{font-size:0.56rem;color:var(--ink-lt);letter-spacing:0.1em;text-transform:uppercase;line-height:1.6;}
+
+/* ── DESKTOP MAIN ── */
+#desktop-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+#desktop-header{
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:12px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.dh-scripture{font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-lt);font-family:'Jost',sans-serif;font-style:italic;}
+.dh-actions{display:flex;gap:8px;}
+.hdr-btn{
+  background:none;border:1px solid var(--border);border-radius:20px;
+  padding:5px 14px;font-size:0.67rem;color:var(--ink-lt);
+  letter-spacing:0.06em;cursor:pointer;display:inline-flex;align-items:center;
+  font-family:'Jost',sans-serif;transition:all 0.2s;
+}
+.hdr-btn:hover{border-color:var(--rose);color:var(--rose);}
+#desktop-content{flex:1;overflow-y:auto;}
+
+/* ── MOBILE LAYOUT ── */
+#mobile-header{
+  background:var(--white);text-align:center;
+  padding:28px 16px 0;border-bottom:1px solid var(--border);
+  position:relative;
+}
+.mh-actions{position:absolute;top:14px;right:14px;display:flex;gap:8px;}
+.mh-dots{color:var(--rose);font-size:0.75rem;letter-spacing:14px;opacity:0.45;margin-bottom:8px;}
+.mh-title{
+  font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:clamp(1.7rem,6vw,2.5rem);color:var(--ink);line-height:1.1;margin-bottom:4px;
+}
+.mh-title em{font-style:italic;color:var(--rose);font-weight:300;}
+.mh-sub{font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--ink-lt);padding-bottom:20px;}
+#mobile-content{min-height:calc(100vh - 130px);padding-bottom:64px;}
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--white);border-top:1px solid var(--border);
+  display:flex;z-index:100;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.bn-btn{
+  flex:1;padding:10px 4px 8px;border:none;
+  background:none;display:flex;flex-direction:column;
+  align-items:center;gap:3px;
+  border-top:2px solid transparent;
+  transition:border-color 0.2s;cursor:pointer;
+}
+.bn-btn.active{border-top-color:var(--rose);}
+.bn-icon{font-size:1.2rem;line-height:1;}
+.bn-lbl{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-lt);font-weight:300;transition:color 0.2s;font-family:'Jost',sans-serif;}
+.bn-btn.active .bn-lbl{color:var(--rose);font-weight:500;}
+
+/* ── SHARED PAGE STYLES ── */
+.page-wrap{padding:28px 32px 60px;max-width:100%;margin:0 auto;}
+.page-wrap-mobile{padding:20px 16px 100px;}
+
+/* ── VERSE STRIP ── */
+.verse-strip{
+  background:linear-gradient(135deg,var(--rose-pale),var(--gold-pale));
+  border:1px solid var(--border);border-radius:6px;
+  padding:20px 22px;text-align:center;margin-bottom:22px;
+}
+.verse-strip p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--ink-md);line-height:1.7;margin-bottom:6px;}
+.verse-strip cite{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);font-style:normal;}
+
+/* ── READING PLAN ── */
+.plan-grid{display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start;}
+.plan-grid-single{display:block;}
+.setup-card{background:var(--white);border-radius:6px;padding:22px;border:1px solid var(--border);}
+.setup-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.setup-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+@media(max-width:768px){.field-grid{grid-template-columns:1fr;}}
+.field-label{display:block;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-lt);margin-bottom:5px;font-weight:400;font-family:'Jost',sans-serif;}
+.field-select{
+  width:100%;padding:9px 32px 9px 12px;border:1px solid var(--border);border-radius:4px;
+  background:var(--bg);font-size:0.82rem;color:var(--ink);
+  appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23A0928A'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  outline:none;font-family:'Jost',sans-serif;
+}
+.field-select:focus{border-color:var(--rose);}
+.gen-btn{
+  width:100%;padding:13px;background:var(--rose);color:white;
+  border:none;border-radius:4px;
+  font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;
+  cursor:pointer;transition:background 0.2s;margin-top:6px;
+}
+.gen-btn:hover{background:#b07088;}
+
+.plan-output-header{
+  background:linear-gradient(135deg,var(--rose-pale),var(--gold-pale));
+  border-radius:6px 6px 0 0;padding:18px 20px;
+  border:1px solid var(--border);border-bottom:none;
+}
+.plan-output-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--ink);margin-bottom:2px;}
+.plan-output-meta{font-size:0.77rem;color:var(--ink-lt);letter-spacing:0.06em;}
+.progress-bar-wrap{
+  background:var(--white);border:1px solid var(--border);border-top:none;
+  padding:12px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.progress-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;min-width:60px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--gold));border-radius:3px;transition:width 0.4s;}
+.progress-txt{font-size:0.75rem;color:var(--ink-lt);white-space:nowrap;}
+.saved-flash{font-size:0.7rem;color:var(--rose);letter-spacing:0.06em;}
+.reset-btn{font-size:0.68rem;color:var(--ink-lt);background:none;border:1px solid var(--border);border-radius:3px;padding:3px 9px;cursor:pointer;font-family:'Jost',sans-serif;}
+.reset-btn:hover{border-color:var(--rose);color:var(--rose);}
+
+.week-block{background:var(--white);border:1px solid var(--border);border-top:none;overflow:hidden;}
+.week-block:last-of-type{border-radius:0 0 6px 6px;}
+.week-hdr{background:var(--bg2);padding:8px 18px;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-lt);border-bottom:1px solid var(--border);}
+.day-row{display:flex;align-items:flex-start;gap:12px;padding:11px 18px;border-bottom:1px solid var(--border-lt);transition:background 0.15s;}
+.day-row:last-child{border-bottom:none;}
+.day-row:hover{background:var(--rose-pale);}
+.day-check{
+  flex-shrink:0;width:20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--rose);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:2px;cursor:pointer;transition:all 0.2s;
+}
+.day-check.done{background:var(--rose);}
+.day-check.done::after{content:'✓';color:white;font-size:10px;line-height:1;}
+.day-info{flex:1;min-width:0;}
+.day-date-lbl{font-size:0.65rem;color:var(--ink-lt);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;}
+.day-reading{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--ink);font-weight:500;line-height:1.35;}
+.note-btn{
+  flex-shrink:0;background:none;border-radius:4px;
+  padding:4px 10px;font-size:0.62rem;
+  letter-spacing:0.06em;text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;transition:all 0.2s;
+  font-family:'Jost',sans-serif;
+}
+.note-btn.empty{border:1px solid var(--border);color:var(--ink-lt);}
+.note-btn.empty:hover{border-color:var(--rose);color:var(--rose);}
+.note-btn.has-note{border:1px solid var(--gold);color:var(--gold);}
+
+.tips-card{margin-top:22px;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:20px 22px;}
+.tips-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);margin-bottom:12px;}
+.tip-row{display:flex;gap:8px;margin-bottom:9px;font-size:0.82rem;color:var(--ink-lt);line-height:1.6;}
+.tip-star{color:var(--rose);flex-shrink:0;}
+
+/* ── NOTES LIST ── */
+.notes-grid{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start;}
+.notes-sidebar{min-width:220px;}
+.mini-cal{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:16px 16px 14px;margin-bottom:16px;}
+.mini-cal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.mini-cal-month{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:500;}
+.cal-arr{background:none;border:none;color:var(--ink-lt);font-size:1rem;cursor:pointer;padding:2px 6px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-dl{font-size:0.56rem;text-align:center;color:var(--ink-lt);padding:3px 0;letter-spacing:0.04em;text-transform:uppercase;}
+.cal-d{
+  font-size:0.68rem;text-align:center;border-radius:50%;
+  color:var(--ink-md);border:none;background:transparent;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  margin:auto;cursor:pointer;font-weight:300;position:relative;
+  font-family:'Jost',sans-serif;
+}
+.cal-d.today{color:var(--rose);font-weight:500;}
+.cal-d.has-note::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--gold);}
+.cal-today-btn{display:block;width:100%;margin-top:12px;padding:7px;background:none;border:1px solid var(--border);border-radius:4px;font-size:0.68rem;color:var(--ink-lt);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+
+.tag-filter-card{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:16px;}
+.tag-filter-lbl{font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-lt);margin-bottom:10px;font-weight:400;}
+.tag-filter-pills{display:flex;flex-wrap:wrap;gap:6px;}
+.tf-pill{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--ink-lt);font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all 0.15s;}
+
+.notes-main-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;}
+.notes-title{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:400;color:var(--ink);}
+.notes-title em{font-style:italic;color:var(--rose);}
+.new-note-btn{background:none;border:none;font-size:0.7rem;color:var(--rose);letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+.gradient-line{width:40px;height:1px;background:linear-gradient(90deg,var(--rose),var(--gold));margin-bottom:20px;}
+
+.note-card{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:16px 18px;cursor:pointer;transition:border-color 0.2s;margin-bottom:10px;}
+.note-card:hover{border-color:var(--rose-lt);}
+.note-card-plan{font-size:0.6rem;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.note-card-ref{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--ink);}
+.note-card-date-sm{font-size:0.65rem;color:var(--ink-lt);white-space:nowrap;flex-shrink:0;}
+.note-card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;}
+.nc-tag{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:20px;font-family:'Jost',sans-serif;}
+.note-card-preview{font-size:0.79rem;color:var(--ink-lt);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-style:italic;}
+
+/* ── NOTE FORM ── */
+.note-form-wrap{background:var(--white);border-radius:6px;padding:28px 32px;border:1px solid var(--border);}
+.back-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:6px 14px;font-size:0.68rem;color:var(--ink-lt);letter-spacing:0.08em;margin-bottom:14px;cursor:pointer;font-family:'Jost',sans-serif;}
+.back-btn:hover{border-color:var(--rose);color:var(--rose);}
+.nf-date{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--ink);margin-bottom:2px;}
+.nf-subtitle{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-lt);margin-bottom:16px;}
+.nf-divider{width:40px;height:1px;background:linear-gradient(90deg,var(--rose),var(--gold));margin-bottom:20px;}
+.plan-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gold-pale);border:1px solid var(--gold-lt);border-radius:4px;padding:6px 14px;font-size:0.7rem;color:var(--gold);letter-spacing:0.08em;margin-bottom:20px;}
+.nf-label{display:block;font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-lt);margin-bottom:7px;font-weight:400;font-family:'Jost',sans-serif;}
+.nf-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:4px;background:var(--bg);font-size:0.85rem;color:var(--ink);outline:none;font-family:'Jost',sans-serif;transition:border-color 0.2s;}
+.nf-input:focus{border-color:var(--rose);}
+.nf-select{width:100%;padding:9px 32px 9px 12px;border:1px solid var(--border);border-radius:4px;background:var(--bg);font-size:0.83rem;color:var(--ink);appearance:none;cursor:pointer;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23A0928A'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;font-family:'Jost',sans-serif;}
+.nf-select:focus{border-color:var(--rose);}
+.ref-grid{display:grid;grid-template-columns:1fr 2fr;gap:10px;}
+.nf-section{margin-bottom:20px;}
+
+/* TAG PILLS — whisper not shout */
+.tag-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px;}
+.tag-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--white);
+  color:var(--ink-lt);
+  font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;font-family:'Jost',sans-serif;
+}
+.tag-pill .tp-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.tag-pill.selected{color:white;}
+.add-custom-pill{padding:5px 12px;border-radius:20px;border:1px dashed var(--border);background:none;color:var(--ink-lt);font-size:0.7rem;cursor:pointer;letter-spacing:0.08em;font-family:'Jost',sans-serif;}
+
+/* RICH TEXT EDITOR */
+.rte-wrap{border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--bg);}
+.rte-toolbar{display:flex;align-items:center;gap:2px;padding:8px 12px;background:var(--white);border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.rte-tool{width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.82rem;color:var(--ink);transition:all 0.15s;font-family:'Jost',sans-serif;}
+.rte-tool:hover{background:var(--rose-pale);border-color:var(--rose);color:var(--rose);}
+.rte-sep{width:1px;height:20px;background:var(--border);margin:0 6px;align-self:center;}
+.hl-lbl{font-size:0.58rem;color:var(--ink-lt);letter-spacing:0.08em;text-transform:uppercase;margin-right:2px;}
+.hl-dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;transition:transform 0.15s;}
+.hl-dot:hover{transform:scale(1.2);}
+.hl-x{background:white;border:1.5px solid var(--border);border-radius:50%;width:18px;height:18px;font-size:0.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-lt);}
+.font-sel{font-size:0.7rem;padding:3px 6px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--ink);cursor:pointer;outline:none;font-family:'Jost',sans-serif;}
+.clear-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:0.62rem;color:var(--ink-lt);cursor:pointer;margin-left:4px;font-family:'Jost',sans-serif;}
+.rte-editor{
+  min-height:220px;padding:14px 16px;font-size:0.87rem;font-weight:300;
+  color:var(--ink);line-height:1.85;outline:none;background:var(--bg);
+  font-family:'Jost',sans-serif;word-break:break-word;
+}
+.rte-editor:empty::before{content:attr(data-placeholder);color:var(--ink-lt);font-style:italic;pointer-events:none;}
+.rte-legend{padding:8px 12px;border-top:1px solid var(--border);background:var(--white);display:flex;gap:12px;flex-wrap:wrap;}
+.rte-legend-item{display:flex;align-items:center;gap:4px;}
+.rte-legend-dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--border);}
+.rte-legend-lbl{font-size:0.58px;color:var(--ink-lt);letter-spacing:0.06em;font-size:0.58rem;}
+
+/* ATTACHMENTS */
+.attach-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.attach-btn{background:none;border:none;font-size:0.7rem;color:var(--rose);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+.attach-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border-radius:3px;margin-bottom:5px;font-size:0.76rem;}
+.attach-name{flex:1;color:var(--ink-md);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.attach-size{color:var(--ink-lt);font-size:0.68rem;}
+.attach-x{background:none;border:none;color:var(--ink-lt);cursor:pointer;font-size:0.76rem;}
+
+/* SAVE ROW */
+.save-row{display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid var(--border-lt);margin-top:20px;}
+.delete-btn{background:none;border:none;font-size:0.7rem;color:var(--ink-lt);letter-spacing:0.06em;cursor:pointer;font-family:'Jost',sans-serif;}
+.delete-btn:hover{color:#C47A7A;}
+.form-actions{display:flex;gap:10px;}
+.cancel-btn{background:none;border:1px solid var(--border);border-radius:3px;padding:9px 18px;font-size:0.73rem;color:var(--ink-lt);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+.save-btn{background:var(--rose);color:white;border:none;border-radius:3px;padding:9px 24px;font-size:0.73rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+.save-btn:hover{background:#b07088;}
+
+/* SEARCH */
+.search-input{width:100%;padding:11px 16px;border:1px solid var(--border);border-radius:6px;background:var(--white);font-size:0.87rem;color:var(--ink);outline:none;margin-bottom:22px;font-family:'Jost',sans-serif;transition:border-color 0.2s;}
+.search-input:focus{border-color:var(--rose);}
+.sr-card{background:var(--white);padding:14px 18px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:border-color 0.2s;margin-bottom:8px;}
+.sr-card:hover{border-color:var(--rose-lt);}
+.sr-title{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--rose);margin-bottom:2px;}
+.sr-preview{font-size:0.78rem;color:var(--ink-lt);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+/* DELETE MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(42,36,32,0.45);display:flex;align-items:center;justify-content:center;z-index:400;padding:20px;backdrop-filter:blur(2px);}
+.modal-box{background:var(--white);border-radius:6px;padding:28px 30px;max-width:360px;width:100%;box-shadow:0 16px 48px rgba(0,0,0,0.12);}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);margin-bottom:10px;}
+.modal-sub{font-size:0.78rem;color:var(--ink-lt);line-height:1.65;font-style:italic;margin-bottom:20px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#F5EDE4;padding:10px 22px;border-radius:20px;font-size:0.78rem;letter-spacing:0.06em;z-index:500;transition:all 0.3s;opacity:0;pointer-events:none;white-space:nowrap;font-family:'Jost',sans-serif;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:50px 0;}
+.empty-icon{font-size:1.6rem;opacity:0.2;margin-bottom:14px;}
+.empty-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink-md);margin-bottom:8px;}
+.empty-sub{font-size:0.78rem;color:var(--ink-lt);font-style:italic;margin-bottom:20px;}
+.empty-cta{background:var(--rose);color:white;border:none;border-radius:4px;padding:10px 24px;font-size:0.76rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+
+@media(max-width:768px){
+  #app-desktop{display:none;}
+  #app-mobile{display:block;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ DESKTOP ══ -->
+<div id="app-desktop">
+  <div id="sidebar">
+    <div class="sb-top">
+      <div class="sb-dots">✦ ✦ ✦</div>
+      <div class="sb-name">Word &amp; Reflect<br><em>Bible Study</em></div>
+      <div class="sb-tagline">Your Word · Your Study · Every Day</div>
+    </div>
+    <nav class="sb-nav">
+      <button class="sb-btn active" id="d-nav-plan" onclick="dGoTo('plan')">
+        <span class="sb-icon">📖</span>
+        <div><div class="sb-lbl">Reading Plan</div><div class="sb-sub">Your daily reading</div></div>
+      </button>
+      <button class="sb-btn" id="d-nav-notes" onclick="dGoTo('notes')">
+        <span class="sb-icon">✏️</span>
+        <div><div class="sb-lbl">My Notes</div><div class="sb-sub">Study &amp; reflection</div></div>
+      </button>
+      <button class="sb-btn" id="d-nav-search" onclick="dGoTo('search')">
+        <span class="sb-icon">🔍</span>
+        <div><div class="sb-lbl">Search</div><div class="sb-sub">Find anything</div></div>
+      </button>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-footer-line"></div>
+      <div class="sb-footer-txt">Your notes stay<br>on your device</div>
+    </div>
+  </div>
+
+  <div id="desktop-main">
+    <div id="desktop-header">
+      <div class="dh-scripture">2 Timothy 2:15 · Study to show yourself approved to God, rightly dividing the word of truth.</div>
+      <div class="dh-actions">
+        <span style="font-size:0.55rem;color:var(--ink-lt);letter-spacing:0.06em;font-style:italic;margin-right:4px;" title="Your notes are saved on this device only. Export regularly to back them up.">⚠ Notes are device-only · Export to back up</span>
+        <button class="hdr-btn" onclick="handleExport()">Export</button>
+        <label class="hdr-btn" style="cursor:pointer">Import<input type="file" accept=".json" onchange="handleImport(event)" style="display:none"></label>
+        <button class="hdr-btn" onclick="toggleDark()">🌙 Dark</button>
+      </div>
+    </div>
+    <div id="desktop-content">
+      <div id="d-page-plan" class="page-wrap"></div>
+      <div id="d-page-notes" class="page-wrap" style="display:none"></div>
+      <div id="d-page-search" class="page-wrap" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MOBILE ══ -->
+<div id="app-mobile">
+  <div id="mobile-header">
+    <div class="mh-actions">
+      <button class="hdr-btn" onclick="handleExport()">Export</button>
+      <label class="hdr-btn" style="cursor:pointer">Import<input type="file" accept=".json" onchange="handleImport(event)" style="display:none"></label>
+    </div>
+    <div class="mh-dots">✦ ✦ ✦</div>
+    <h1 class="mh-title">Word &amp; Reflect <em>Bible Study</em></h1>
+    <p class="mh-sub">Your Word · Your Study · Every Day</p>
+  </div>
+  <div id="mobile-content">
+    <div id="m-page-plan" class="page-wrap-mobile"></div>
+    <div id="m-page-notes" class="page-wrap-mobile" style="display:none"></div>
+    <div id="m-page-search" class="page-wrap-mobile" style="display:none"></div>
+  </div>
+  <nav id="bottom-nav">
+    <button class="bn-btn active" id="m-nav-plan" onclick="mGoTo('plan')">
+      <span class="bn-icon">📖</span><span class="bn-lbl">Plan</span>
+    </button>
+    <button class="bn-btn" id="m-nav-notes" onclick="mGoTo('notes')">
+      <span class="bn-icon">✏️</span><span class="bn-lbl">Notes</span>
+    </button>
+    <button class="bn-btn" id="m-nav-search" onclick="mGoTo('search')">
+      <span class="bn-icon">🔍</span><span class="bn-lbl">Search</span>
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const BOOKS=[
+  {name:"Genesis",chapters:50,t:"OT"},{name:"Exodus",chapters:40,t:"OT"},{name:"Leviticus",chapters:27,t:"OT"},
+  {name:"Numbers",chapters:36,t:"OT"},{name:"Deuteronomy",chapters:34,t:"OT"},{name:"Joshua",chapters:24,t:"OT"},
+  {name:"Judges",chapters:21,t:"OT"},{name:"Ruth",chapters:4,t:"OT"},{name:"1 Samuel",chapters:31,t:"OT"},
+  {name:"2 Samuel",chapters:24,t:"OT"},{name:"1 Kings",chapters:22,t:"OT"},{name:"2 Kings",chapters:25,t:"OT"},
+  {name:"1 Chronicles",chapters:29,t:"OT"},{name:"2 Chronicles",chapters:36,t:"OT"},{name:"Ezra",chapters:10,t:"OT"},
+  {name:"Nehemiah",chapters:13,t:"OT"},{name:"Esther",chapters:10,t:"OT"},{name:"Job",chapters:42,t:"OT"},
+  {name:"Psalms",chapters:150,t:"OT"},{name:"Proverbs",chapters:31,t:"OT"},{name:"Ecclesiastes",chapters:12,t:"OT"},
+  {name:"Song of Solomon",chapters:8,t:"OT"},{name:"Isaiah",chapters:66,t:"OT"},{name:"Jeremiah",chapters:52,t:"OT"},
+  {name:"Lamentations",chapters:5,t:"OT"},{name:"Ezekiel",chapters:48,t:"OT"},{name:"Daniel",chapters:12,t:"OT"},
+  {name:"Hosea",chapters:14,t:"OT"},{name:"Joel",chapters:3,t:"OT"},{name:"Amos",chapters:9,t:"OT"},
+  {name:"Obadiah",chapters:1,t:"OT"},{name:"Jonah",chapters:4,t:"OT"},{name:"Micah",chapters:7,t:"OT"},
+  {name:"Nahum",chapters:3,t:"OT"},{name:"Habakkuk",chapters:3,t:"OT"},{name:"Zephaniah",chapters:3,t:"OT"},
+  {name:"Haggai",chapters:2,t:"OT"},{name:"Zechariah",chapters:14,t:"OT"},{name:"Malachi",chapters:4,t:"OT"},
+  {name:"Matthew",chapters:28,t:"NT"},{name:"Mark",chapters:16,t:"NT"},{name:"Luke",chapters:24,t:"NT"},
+  {name:"John",chapters:21,t:"NT"},{name:"Acts",chapters:28,t:"NT"},{name:"Romans",chapters:16,t:"NT"},
+  {name:"1 Corinthians",chapters:16,t:"NT"},{name:"2 Corinthians",chapters:13,t:"NT"},{name:"Galatians",chapters:6,t:"NT"},
+  {name:"Ephesians",chapters:6,t:"NT"},{name:"Philippians",chapters:4,t:"NT"},{name:"Colossians",chapters:4,t:"NT"},
+  {name:"1 Thessalonians",chapters:5,t:"NT"},{name:"2 Thessalonians",chapters:3,t:"NT"},{name:"1 Timothy",chapters:6,t:"NT"},
+  {name:"2 Timothy",chapters:4,t:"NT"},{name:"Titus",chapters:3,t:"NT"},{name:"Philemon",chapters:1,t:"NT"},
+  {name:"Hebrews",chapters:13,t:"NT"},{name:"James",chapters:5,t:"NT"},{name:"1 Peter",chapters:5,t:"NT"},
+  {name:"2 Peter",chapters:3,t:"NT"},{name:"1 John",chapters:5,t:"NT"},{name:"2 John",chapters:1,t:"NT"},
+  {name:"3 John",chapters:1,t:"NT"},{name:"Jude",chapters:1,t:"NT"},{name:"Revelation",chapters:22,t:"NT"}
+];
+const STYLE_BOOKS={
+  chronological:["Genesis","Job","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","Psalms","1 Kings","1 Chronicles","2 Chronicles","Proverbs","Ecclesiastes","Song of Solomon","2 Kings","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"],
+  "psalms-proverbs":["Psalms","Proverbs"],
+  gospels:["Matthew","Mark","Luke","John"],
+  epistles:["Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude"]
+};
+const STYLE_NAMES={book:'Book-at-a-Time',balanced:'OT + NT Balanced',chronological:'Chronological','psalms-proverbs':'Psalms & Proverbs',gospels:'Gospels Focus',epistles:"Paul's Epistles"};
+const TAGS=[
+  {id:'bible-study',name:'Bible Study',color:'#C4879A'},
+  {id:'devotion',   name:'Devotion',   color:'#B8975A'},
+  {id:'sermon',     name:'Sermon',     color:'#8BA8C4'},
+  {id:'prayer',     name:'Prayer',     color:'#8BB89A'},
+  {id:'gratitude',  name:'Gratitude',  color:'#B08BC4'}
+];
+const HL_COLORS=[
+  {color:'#FFF176',label:'Key Verse'},
+  {color:'#F48FB1',label:'Conviction'},
+  {color:'#A5D6A7',label:'Promise'},
+  {color:'#90CAF9',label:'Prayer'},
+  {color:'#CE93D8',label:'Revelation'}
+];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS_FULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAYS_SHORT3=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS_SHORT2=['Su','Mo','Tu','We','Th','Fr','Sa'];
+const OT=BOOKS.filter(b=>b.t==='OT');
+const NT=BOOKS.filter(b=>b.t==='NT');
+
+function midnight(d){const n=new Date(d);n.setHours(0,0,0,0);return n;}
+function dk(d){return d.toISOString().split('T')[0];}
+function buildRefLabel(book,chapter,verse){if(!book)return '';let r=book;if(chapter)r+=' '+chapter;if(verse)r+=':'+verse;return r;}
+function fmtSz(b){if(b<1024)return b+'B';if(b<1048576)return Math.round(b/1024)+'KB';return(b/1048576).toFixed(1)+'MB';}
+
+// ── STORE ──
+const SK='wr-olive-v1';
+const CUSTOM_TAG_KEY='wr-olive-custom-tags';
+let store={notes:{},plan:null,checks:{}};
+let dark=false;
+let customTags=[];
+
+function loadStore(){
+  try{const r=localStorage.getItem(SK);if(r)store=JSON.parse(r);}catch(e){}
+  try{const ct=localStorage.getItem(CUSTOM_TAG_KEY);if(ct)customTags=JSON.parse(ct);}catch(e){}
+  try{dark=localStorage.getItem('wr-olive-dark')==='true';if(dark)document.documentElement.setAttribute('data-theme','dark');}catch(e){}
+}
+function saveStore(){try{localStorage.setItem(SK,JSON.stringify(store));}catch(e){}}
+function saveCustomTags(){try{localStorage.setItem(CUSTOM_TAG_KEY,JSON.stringify(customTags));}catch(e){}}
+
+function toggleDark(){
+  dark=!dark;
+  localStorage.setItem('wr-olive-dark',dark);
+  if(dark)document.documentElement.setAttribute('data-theme','dark');
+  else document.documentElement.removeAttribute('data-theme');
+}
+
+// ── NAV ──
+let dTab='plan', mTab='plan';
+let dNoteId=null, mNoteId=null;
+
+function dGoTo(tab){
+  dTab=tab; dNoteId=null;
+  ['plan','notes','search'].forEach(t=>{
+    document.getElementById('d-page-'+t).style.display=t===tab?'':'none';
+    document.getElementById('d-nav-'+t).classList.toggle('active',t===tab);
+  });
+  renderDPage(tab);
+}
+function mGoTo(tab){
+  mTab=tab; mNoteId=null;
+  ['plan','notes','search'].forEach(t=>{
+    document.getElementById('m-page-'+t).style.display=t===tab?'':'none';
+    document.getElementById('m-nav-'+t).classList.toggle('active',t===tab);
+  });
+  renderMPage(tab);
+}
+function renderDPage(tab){
+  if(tab==='plan')renderPlan('d-page-plan',true);
+  if(tab==='notes')renderNotesList('d-page-notes',true);
+  if(tab==='search')renderSearch('d-page-search',true);
+}
+function renderMPage(tab){
+  if(tab==='plan')renderPlan('m-page-plan',false);
+  if(tab==='notes')renderNotesList('m-page-notes',false);
+  if(tab==='search')renderSearch('m-page-search',false);
+}
+
+// ── READING PLAN ──
+let planStyle='psalms-proverbs',planCpd=2,planStartDate=new Date().toISOString().split('T')[0],planStartBook='Genesis';
+let planReadingList=[],planGenerated=false,savedFlashTimer=null;
+
+function buildReadingList(s,cpd,sd,sb){
+  let list=[];
+  if(s==='balanced'){
+    let oi=0,oc=1,ni=0,nc=1;
+    const days=Math.min(Math.ceil((OT.reduce((a,b)=>a+b.chapters,0)+NT.reduce((a,b)=>a+b.chapters,0))/2),365);
+    for(let i=0;i<days;i++){const ob=OT[oi],nb=NT[ni];if(!ob||!nb)break;list.push(`${ob.name} ${oc} + ${nb.name} ${nc}`);oc++;if(oc>ob.chapters){oi++;oc=1;}nc++;if(nc>nb.chapters){ni++;nc=1;}}
+  } else {
+    let bookList;
+    if(s==='book'){const idx=BOOKS.findIndex(b=>b.name===sb);bookList=BOOKS.slice(idx);}
+    else if(s==='chronological'){bookList=STYLE_BOOKS.chronological.map(n=>BOOKS.find(b=>b.name===n)).filter(Boolean);}
+    else{bookList=(STYLE_BOOKS[s]||[]).map(n=>BOOKS.find(b=>b.name===n)).filter(Boolean);}
+    let queue=[];
+    bookList.forEach(book=>{for(let ch=1;ch<=book.chapters;ch++)queue.push(`${book.name} ${ch}`);});
+    for(let i=0;i<queue.length;i+=cpd)list.push(queue.slice(i,i+cpd).join(' + '));
+  }
+  return list.slice(0,180);
+}
+
+function generatePlan(isDesktop){
+  const pfx=isDesktop?'d':'m';
+  planStyle=document.getElementById(pfx+'-style').value;
+  planCpd=parseInt(document.getElementById(pfx+'-cpd').value);
+  planStartDate=document.getElementById(pfx+'-date').value;
+  planStartBook=document.getElementById(pfx+'-book').value;
+  if(!planStartDate){showToast('Please choose a start date');return;}
+  planReadingList=buildReadingList(planStyle,planCpd,planStartDate,planStartBook);
+  planGenerated=true;
+  store.plan={style:planStyle,chaptersPerDay:planCpd,startDate:planStartDate,startBook:planStartBook};
+  saveStore();
+  renderPlan('d-page-plan',true);
+  renderPlan('m-page-plan',false);
+}
+
+function handleCheck(idx){
+  store.checks[idx]=!store.checks[idx];
+  saveStore();
+  // flash saved
+  const els=document.querySelectorAll('.saved-flash');
+  els.forEach(el=>{el.style.opacity='1';setTimeout(()=>el.style.opacity='0',1800);});
+  // update check UI
+  const checks=document.querySelectorAll(`.day-check[data-idx="${idx}"]`);
+  checks.forEach(c=>{c.classList.toggle('done',store.checks[idx]);});
+  // update progress
+  updateProgress();
+}
+
+function updateProgress(){
+  const done=Object.values(store.checks).filter(Boolean).length;
+  const total=planReadingList.length;
+  const pct=total>0?Math.round((done/total)*100):0;
+  document.querySelectorAll('.progress-fill').forEach(el=>el.style.width=pct+'%');
+  document.querySelectorAll('.progress-txt').forEach(el=>el.textContent=`${done} / ${total} complete`);
+}
+
+function renderPlan(containerId,isDesktop){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  const pfx=isDesktop?'d':'m';
+  const pad=isDesktop?'28px 32px 40px':'24px 16px 100px';
+
+  // restore plan if saved
+  if(store.plan&&!planGenerated){
+    planStyle=store.plan.style;planCpd=store.plan.chaptersPerDay;
+    planStartDate=store.plan.startDate;planStartBook=store.plan.startBook;
+    planReadingList=buildReadingList(planStyle,planCpd,planStartDate,planStartBook);
+    planGenerated=true;
+  }
+
+  const done=Object.values(store.checks).filter(Boolean).length;
+  const total=planReadingList.length;
+  const pct=total>0?Math.round((done/total)*100):0;
+
+  const weeks=[];
+  for(let i=0;i<planReadingList.length;i+=7)weeks.push(planReadingList.slice(i,i+7).map((r,j)=>({reading:r,idx:i+j})));
+
+  const bookOpts=BOOKS.map(b=>`<option value="${b.name}"${b.name===planStartBook?' selected':''}>${b.name}</option>`).join('');
+
+  const setupCard=`
+    <div class="setup-card" style="margin-bottom:${isDesktop?0:20}px">
+      <div class="setup-title">Build Your Reading Plan</div>
+      <div class="field-grid">
+        <div><label class="field-label">Reading Style</label>
+          <select class="field-select" id="${pfx}-style">
+            <option value="book"${planStyle==='book'?' selected':''}>Book-at-a-Time</option>
+            <option value="balanced"${planStyle==='balanced'?' selected':''}>OT + NT Daily</option>
+            <option value="chronological"${planStyle==='chronological'?' selected':''}>Chronological</option>
+            <option value="psalms-proverbs"${planStyle==='psalms-proverbs'?' selected':''}>Psalms + Proverbs</option>
+            <option value="gospels"${planStyle==='gospels'?' selected':''}>Gospels Focus</option>
+            <option value="epistles"${planStyle==='epistles'?' selected':''}>Epistles</option>
+          </select>
+        </div>
+        <div><label class="field-label">Chapters / Day</label>
+          <select class="field-select" id="${pfx}-cpd">
+            <option value="1"${planCpd===1?' selected':''}>1 chapter</option>
+            <option value="2"${planCpd===2?' selected':''}>2 chapters</option>
+            <option value="3"${planCpd===3?' selected':''}>3 chapters</option>
+            <option value="4"${planCpd===4?' selected':''}>4 chapters</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div><label class="field-label">Start Date</label>
+          <input type="date" class="field-select" id="${pfx}-date" value="${planStartDate}" style="background-image:none">
+        </div>
+        <div><label class="field-label">Starting Book</label>
+          <select class="field-select" id="${pfx}-book">${bookOpts}</select>
+        </div>
+      </div>
+      <button class="gen-btn" onclick="generatePlan(${isDesktop})">✦ Generate My Reading Plan</button>
+    </div>`;
+
+  let planOutput='';
+  if(planGenerated&&planReadingList.length>0){
+    const sd=new Date(planStartDate+'T00:00:00');
+    const sdStr=sd.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    const weeksHTML=weeks.map((week,wi)=>{
+      const daysHTML=week.map(({reading,idx})=>{
+        const d=new Date(planStartDate+'T00:00:00');d.setDate(d.getDate()+idx);
+        const dateStr=dk(d);
+        const hasNote=Object.values(store.notes).some(n=>n.planReading===reading&&n.planDate===dateStr);
+        return `<div class="day-row">
+          <button class="day-check${store.checks[idx]?' done':''}" data-idx="${idx}" onclick="handleCheck(${idx})"></button>
+          <div class="day-info">
+            <div class="day-date-lbl">${DAYS_SHORT3[d.getDay()]} · ${MONTHS[d.getMonth()]} ${d.getDate()}</div>
+            <div class="day-reading">${reading}</div>
+          </div>
+          <button class="note-btn ${hasNote?'has-note':'empty'}" onclick="openNoteFromPlan('${dateStr}','${reading.replace(/'/g,"\\'")}',${isDesktop})">
+            ${hasNote?'📝 Note':'+ Note'}
+          </button>
+        </div>`;
+      }).join('');
+      return `<div class="week-block"><div class="week-hdr">Week ${wi+1}</div>${daysHTML}</div>`;
+    }).join('');
+
+    planOutput=`
+      <div>
+        <div class="plan-output-header">
+          <div class="plan-output-title">${STYLE_NAMES[planStyle]||planStyle} Plan</div>
+          <div class="plan-output-meta">Starting ${sdStr} · ${planReadingList.length} days</div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <span class="progress-txt">${done} / ${total} complete</span>
+          <span class="saved-flash" style="opacity:0;font-size:0.7rem;color:var(--rose);letter-spacing:0.06em;">✦ Saved</span>
+          <button class="reset-btn" onclick="if(confirm('Reset all checkboxes?')){store.checks={};saveStore();renderPlan('d-page-plan',true);renderPlan('m-page-plan',false);}">Reset</button>
+        </div>
+        ${weeksHTML}
+        <div class="tips-card">
+          <div class="tips-title">Study Tips</div>
+          ${[['Pray before you open.','Even 30 seconds of asking God to speak changes the experience completely.'],
+             ['Write one thing.','Tap the note button on any day to capture what God is saying.'],
+             ["Don't guilt-skip.",'If you miss a day, just pick up where you left off.'],
+             ['Pair translations.','Read the same passage in two versions — the differences illuminate meaning beautifully.']
+            ].map(([s,t])=>`<div class="tip-row"><span class="tip-star">✦</span><span><strong style="color:var(--ink-md)">${s}</strong> ${t}</span></div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  const verseStrip=`<div class="verse-strip"><p>"Your word is a lamp to my feet and a light to my path."</p><cite>Psalm 119:105</cite></div>`;
+
+  if(isDesktop){
+    const rightPanel=planGenerated&&planOutput?planOutput:`<div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--ink-lt);font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;font-style:italic;">Generate your plan to get started.</div>`;
+    el.innerHTML=`<div style="padding:28px 32px 60px">${verseStrip}<div class="plan-grid"><div>${setupCard}</div><div>${rightPanel}</div></div></div>`;
+  } else {
+    el.innerHTML=`<div style="padding:${pad}">${verseStrip}${setupCard}${planOutput}</div>`;
+  }
+}
+
+function openNoteFromPlan(dateStr,reading,isDesktop){
+  // One note per day — use date as the key
+  if(!store.notes[dateStr]){
+    store.notes[dateStr]={title:'',book:'',chapter:'',verse:'',text:'',tags:[],attachments:[],planReading:reading,planDate:dateStr,noteDate:dateStr,updated:new Date().toISOString()};
+    saveStore();
+  }
+  if(isDesktop){dNoteId=dateStr;renderNoteForm('d-page-notes',true,dateStr,reading,dateStr);document.getElementById('d-page-notes').style.display='';document.getElementById('d-page-plan').style.display='none';document.getElementById('d-nav-notes').classList.add('active');document.getElementById('d-nav-plan').classList.remove('active');dTab='notes';}
+  else{mNoteId=dateStr;renderNoteForm('m-page-notes',false,dateStr,reading,dateStr);document.getElementById('m-page-notes').style.display='';document.getElementById('m-page-plan').style.display='none';document.getElementById('m-nav-notes').classList.add('active');document.getElementById('m-nav-plan').classList.remove('active');mTab='notes';}
+}
+
+// ── NOTES LIST ──
+let calY=new Date().getFullYear(),calM=new Date().getMonth();
+let filterTag=null;
+
+function renderNotesList(containerId,isDesktop){
+  const el=document.getElementById(containerId);if(!el)return;
+  if((isDesktop&&dNoteId)||((!isDesktop)&&mNoteId)){
+    renderNoteForm(containerId,isDesktop,isDesktop?dNoteId:mNoteId,null,null);return;
+  }
+
+  const today=midnight(new Date());
+  const todayKey=dk(today);
+  let entries=Object.entries(store.notes).sort((a,b)=>b[0].localeCompare(a[0]));
+  if(filterTag)entries=entries.filter(([k,n])=>n.tags&&n.tags.includes(filterTag));
+
+  const first=new Date(calY,calM,1).getDay();
+  const dcount=new Date(calY,calM+1,0).getDate();
+  let calDays=[];
+  for(let i=0;i<first;i++)calDays.push(null);
+  for(let d=1;d<=dcount;d++)calDays.push(d);
+
+  const calHTML=`
+    <div class="mini-cal">
+      <div class="mini-cal-hdr">
+        <button class="cal-arr" onclick="calPrev(${isDesktop})">‹</button>
+        <span class="mini-cal-month">${MONTHS[calM]} ${calY}</span>
+        <button class="cal-arr" onclick="calNext(${isDesktop})">›</button>
+      </div>
+      <div class="cal-grid">
+        ${DAYS_SHORT2.map(d=>`<div class="cal-dl">${d}</div>`).join('')}
+        ${calDays.map((d,i)=>{
+          if(!d)return'<div></div>';
+          const dt=new Date(calY,calM,d);dt.setHours(0,0,0,0);
+          const key=dk(dt);
+          const isToday=dt.getTime()===today.getTime();
+          const hasNote=Object.values(store.notes).some(n=>n.noteDate===key);
+          return `<button class="cal-d${isToday?' today':''}${hasNote?' has-note':''}" onclick="openNoteForDate('${key}',${isDesktop})">${d}</button>`;
+        }).join('')}
+      </div>
+      <button class="cal-today-btn" onclick="calToday(${isDesktop})">Today</button>
+    </div>`;
+
+  const allTags=[...TAGS,...customTags];
+  const tagFilterHTML=`
+    <div class="tag-filter-card">
+      <div class="tag-filter-lbl">Filter by Tag</div>
+      <div class="tag-filter-pills">
+        <button class="tf-pill" style="background:${!filterTag?'var(--rose)':'var(--white)'};color:${!filterTag?'white':'var(--ink-lt)'};border-color:${!filterTag?'var(--rose)':'var(--border)'}" onclick="setFilterTag(null,${isDesktop})">All</button>
+        ${allTags.filter(t=>Object.values(store.notes).some(n=>n.tags&&n.tags.includes(t.id))).map(t=>`
+          <button class="tf-pill" style="background:${filterTag===t.id?t.color:'var(--white)'};color:${filterTag===t.id?'white':'var(--ink-lt)'};border-color:${filterTag===t.id?t.color:'var(--border)'}" onclick="setFilterTag('${t.id}',${isDesktop})">${t.name}</button>
+        `).join('')}
+      </div>
+    </div>`;
+
+  const notesMainHTML=`
+    <div style="width:100%;min-width:0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px">
+        <h2 class="notes-title">${filterTag?`<em>${[...TAGS,...customTags].find(t=>t.id===filterTag)?.name||''}</em> Notes`:'All <em>Notes</em>'}</h2>
+        <button class="new-note-btn" onclick="openNewNote(${isDesktop})">+ NEW NOTE</button>
+      </div>
+      <div class="gradient-line"></div>
+      ${entries.length===0?`
+        <div class="empty-state">
+          <div class="empty-icon">✦</div>
+          <div class="empty-title">${filterTag?'No notes with this tag yet':'Your study space is ready'}</div>
+          <div class="empty-sub">${filterTag?'Write a note and tag it.':'Write your first note to begin.'}</div>
+          <button class="empty-cta" onclick="openNewNote(${isDesktop})">Write First Note</button>
+        </div>`
+      :entries.map(([key,note])=>{
+        const ref=buildRefLabel(note.book,note.chapter,note.verse);
+        const d=new Date(note.noteDate+'T12:00:00');
+        const dateLabel=`${DAYS_FULL[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+        const allT=[...TAGS,...customTags];
+        const tagsHTML=(note.tags||[]).map(id=>{const t=allT.find(x=>x.id===id);return t?`<span class="nc-tag" style="border:1px solid ${t.color};color:${t.color}">${t.name}</span>`:''}).join('');
+        return `<div class="note-card" onclick="openNote('${key}',${isDesktop})">
+          ${note.planReading?`<div class="note-card-plan">✦ ${note.planReading}</div>`:''}
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px">
+            <div class="note-card-ref">${note.planReading?dateLabel:(ref||dateLabel)}</div>
+            ${ref&&!note.planReading?`<div class="note-card-date-sm">${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}</div>`:''}
+          </div>
+          ${tagsHTML?`<div class="note-card-tags">${tagsHTML}</div>`:''}
+          <div class="note-card-preview">${(note.text||'').replace(/<[^>]*>/g,'').slice(0,160)||'No text written yet.'}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  if(isDesktop){
+    el.innerHTML=`<div style="padding:28px 32px 60px"><div style="display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start"><div>${calHTML}${tagFilterHTML}</div>${notesMainHTML}</div></div>`;
+  } else {
+    el.innerHTML=`${calHTML}${tagFilterHTML}${notesMainHTML}`;
+  }
+}
+
+function calPrev(isDesktop){calM--;if(calM<0){calM=11;calY--;}if(isDesktop)renderNotesList('d-page-notes',true);else renderNotesList('m-page-notes',false);}
+function calNext(isDesktop){calM++;if(calM>11){calM=0;calY++;}if(isDesktop)renderNotesList('d-page-notes',true);else renderNotesList('m-page-notes',false);}
+function calToday(isDesktop){calY=new Date().getFullYear();calM=new Date().getMonth();openNoteForDate(dk(midnight(new Date())),isDesktop);}
+function setFilterTag(tag,isDesktop){filterTag=tag;if(isDesktop)renderNotesList('d-page-notes',true);else renderNotesList('m-page-notes',false);}
+function openNoteForDate(dateStr,isDesktop){openNote(null,isDesktop,dateStr);}
+function openNewNote(isDesktop){openNote(null,isDesktop,null);}
+
+function openNote(noteKey,isDesktop,dateStr){
+  const key=noteKey||(dateStr||dk(midnight(new Date())));
+  if(isDesktop){dNoteId=key;renderNoteForm('d-page-notes',true,store.notes[key]?key:null,null,dateStr||dk(midnight(new Date())));}
+  else{mNoteId=key;renderNoteForm('m-page-notes',false,store.notes[key]?key:null,null,dateStr||dk(midnight(new Date())));}
+}
+
+// ── NOTE FORM ──
+function renderNoteForm(containerId,isDesktop,noteKey,planReading,planDate){
+  const el=document.getElementById(containerId);if(!el)return;
+  const note=noteKey?store.notes[noteKey]:null;
+  const now=new Date();
+  const dateStr=planDate||(note?.noteDate)||dk(midnight(now));
+  const d=new Date(dateStr+'T12:00:00');
+  const dateLabel=`${DAYS_FULL[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  const allTags=[...TAGS,...customTags];
+  const chapCount=note?.book?(BOOKS.find(b=>b.name===note.book)?.chapters||0):0;
+
+  const bookOpts=`<option value="">Select a book…</option>
+    <optgroup label="Old Testament">${OT.map(b=>`<option value="${b.name}"${note?.book===b.name?' selected':''}>${b.name}</option>`).join('')}</optgroup>
+    <optgroup label="New Testament">${NT.map(b=>`<option value="${b.name}"${note?.book===b.name?' selected':''}>${b.name}</option>`).join('')}</optgroup>`;
+
+  const chapOpts=`<option value="">Ch.</option>${Array.from({length:chapCount},(_,i)=>`<option value="${i+1}"${note?.chapter==i+1?' selected':''}>${i+1}</option>`).join('')}`;
+
+  const tagPillsHTML=allTags.map(t=>`
+    <button class="tag-pill${note?.tags?.includes(t.id)?' selected':''}" 
+      data-tag="${t.id}" data-color="${t.color}"
+      style="${note?.tags?.includes(t.id)?`background:${t.color};border-color:${t.color};`:`border-color:var(--border);`}"
+      onclick="toggleTagPill(this,'${t.id}','${t.color}')">
+      <div class="tp-dot" style="background:${note?.tags?.includes(t.id)?'rgba(255,255,255,0.7)':t.color}"></div>
+      ${t.name}
+    </button>`).join('');
+
+  const hlLegend=HL_COLORS.map(h=>`<div class="rte-legend-item"><div class="rte-legend-dot" style="background:${h.color}"></div><span class="rte-legend-lbl">${h.label}</span></div>`).join('');
+
+  el.innerHTML=`
+    <div style="padding:${isDesktop?'28px 32px 60px':'16px 16px 100px'}">
+      <button class="back-btn" onclick="backToNotes(${isDesktop})">← Back</button>
+      <div class="note-form-wrap">
+        <div class="nf-date">${dateLabel}</div>
+        <div class="nf-subtitle">Personal Bible Study Note</div>
+        <div class="nf-divider"></div>
+        ${planReading||note?.planReading?`<div class="plan-badge">✦ ${planReading||note?.planReading}</div>`:''}
+
+        <div class="nf-section">
+          <label class="nf-label">Note Title</label>
+          <input class="nf-input" id="nf-title" type="text" value="${esc(note?.title||'')}" placeholder="Give this note a title (e.g. 'God's faithfulness in Psalms 23')">
+        </div>
+
+        <div class="nf-section">
+          <label class="nf-label">Scripture Reference</label>
+          <div style="margin-bottom:10px">
+            <label class="nf-label" style="margin-bottom:4px">Book</label>
+            <select class="nf-select" id="nf-book" onchange="updateChapters(this.value)">${bookOpts}</select>
+          </div>
+          <div class="ref-grid">
+            <div>
+              <label class="nf-label" style="margin-bottom:4px">Chapter</label>
+              <select class="nf-select" id="nf-chapter">${chapOpts}</select>
+            </div>
+            <div>
+              <label class="nf-label" style="margin-bottom:4px">Verse(s)</label>
+              <input class="nf-input" id="nf-verse" type="text" value="${esc(note?.verse||'')}" placeholder="e.g. 3–5 or 3, 7">
+            </div>
+          </div>
+        </div>
+
+        <div class="nf-section">
+          <label class="nf-label">Tag this note</label>
+          <div class="tag-pills" id="tag-pills-wrap">
+            ${tagPillsHTML}
+            <button class="add-custom-pill" onclick="addCustomTagPrompt(${isDesktop})">+ Custom</button>
+          </div>
+        </div>
+
+        <div class="nf-section">
+          <label class="nf-label">Notes &amp; Reflection</label>
+          <div class="rte-wrap">
+            <div class="rte-toolbar">
+              <button class="rte-tool" onmousedown="event.preventDefault()" onclick="fmt('bold')"><b>B</b></button>
+              <button class="rte-tool" onmousedown="event.preventDefault()" onclick="fmt('italic')"><em>I</em></button>
+              <button class="rte-tool" onmousedown="event.preventDefault()" onclick="fmt('underline')"><u>U</u></button>
+              <div class="rte-sep"></div>
+              <span class="hl-lbl">Highlight</span>
+              ${HL_COLORS.map(h=>`<div class="hl-dot" style="background:${h.color}" title="${h.label}" onmousedown="event.preventDefault()" onclick="applyHL('${h.color}')"></div>`).join('')}
+              <div class="hl-x" onmousedown="event.preventDefault()" onclick="applyHL('transparent')" title="Remove">✕</div>
+              <div class="rte-sep"></div>
+              <select class="font-sel" onchange="applyFont(this.value);this.value=''">
+                <option value="" disabled selected>Font</option>
+                <option value="'Jost',sans-serif">Default</option>
+                <option value="Georgia,serif">Serif</option>
+                <option value="'Cormorant Garamond',serif">Elegant</option>
+                <option value="'Courier Prime',monospace">Typewriter</option>
+              </select>
+              <button class="clear-btn" onmousedown="event.preventDefault()" onclick="clearFormatting()">Clear</button>
+            </div>
+            <div class="rte-editor" id="nf-rte" contenteditable="true" 
+              data-placeholder="Write freely — observations, questions, what God is speaking, how it applies to your life…"
+              oninput="void 0">${note?.text||''}</div>
+            <div class="rte-legend">${hlLegend}</div>
+          </div>
+        </div>
+
+        <div class="nf-section">
+          <div class="attach-hdr">
+            <label class="nf-label" style="margin-bottom:0">Attachments</label>
+            <button class="attach-btn" onclick="document.getElementById('nf-file').click()">+ Attach</button>
+            <input type="file" id="nf-file" multiple style="display:none" onchange="handleAttach(event)">
+          </div>
+          <div id="attach-list">${renderAttachList(window._currentAttachments||(note?.attachments||[]))}</div>
+        </div>
+
+        <div class="save-row">
+          ${noteKey?`<button class="delete-btn" onclick="confirmDelete('${noteKey}',${isDesktop})">Delete note</button>`:'<div></div>'}
+          <div class="form-actions">
+            <button class="cancel-btn" onclick="backToNotes(${isDesktop})">Cancel</button>
+            <button class="save-btn" onclick="saveNote('${noteKey||''}','${dateStr}','${planReading||note?.planReading||''}','${planDate||note?.planDate||dateStr}',${isDesktop})">Save Note</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  window._currentAttachments=note?.attachments?[...note.attachments]:[];
+  window._currentNoteKey=noteKey;
+  window._currentIsDesktop=isDesktop;
+}
+
+function renderAttachList(attachments){
+  if(!attachments||!attachments.length)return`<div style="font-size:0.76rem;color:var(--ink-lt);font-style:italic">No attachments yet.</div>`;
+  return attachments.map((a,i)=>`
+    <div class="attach-row">
+      <span>${['jpg','jpeg','png','gif','webp'].includes(a.name.split('.').pop().toLowerCase())?'🖼️':a.name.endsWith('.pdf')?'📄':'📎'}</span>
+      <span class="attach-name">${esc(a.name)}</span>
+      <span class="attach-size">${a.size}</span>
+      <button class="attach-x" onclick="removeAttach(${i})">✕</button>
+    </div>`).join('');
+}
+
+function handleAttach(e){
+  const MAX=2*1024*1024; // 2MB per file
+  Array.from(e.target.files).forEach(f=>{
+    if(f.size>MAX){showToast(`"${f.name}" is too large. Max 2MB per file.`);return;}
+    const r=new FileReader();
+    r.onload=ev=>{
+      window._currentAttachments.push({name:f.name,size:fmtSz(f.size),type:f.type,data:ev.target.result});
+      document.getElementById('attach-list').innerHTML=renderAttachList(window._currentAttachments);
+    };
+    r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+
+function removeAttach(i){
+  window._currentAttachments.splice(i,1);
+  document.getElementById('attach-list').innerHTML=renderAttachList(window._currentAttachments);
+}
+
+function updateChapters(bookName){
+  const bk=BOOKS.find(b=>b.name===bookName);
+  const sel=document.getElementById('nf-chapter');
+  if(!sel)return;
+  sel.innerHTML=`<option value="">Ch.</option>${bk?Array.from({length:bk.chapters},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join(''):''}`;
+}
+
+function toggleTagPill(btn,tagId,color){
+  const selected=btn.classList.toggle('selected');
+  btn.style.background=selected?color:'var(--white)';
+  btn.style.borderColor=selected?color:'var(--border)';
+  const dot=btn.querySelector('.tp-dot');
+  if(dot)dot.style.background=selected?'rgba(255,255,255,0.7)':color;
+}
+
+function addCustomTagPrompt(isDesktop){
+  const name=prompt('Enter custom tag name:');
+  if(!name||!name.trim())return;
+  const newTag={id:'custom-'+Date.now(),name:name.trim(),color:'#8A8880',custom:true};
+  customTags.push(newTag);
+  saveCustomTags();
+  const wrap=document.getElementById('tag-pills-wrap');
+  if(wrap){
+    const btn=document.createElement('button');
+    btn.className='tag-pill';
+    btn.dataset.tag=newTag.id;
+    btn.dataset.color=newTag.color;
+    btn.style.borderColor='var(--border)';
+    btn.innerHTML=`<div class="tp-dot" style="background:${newTag.color}"></div>${newTag.name}`;
+    btn.onclick=function(){toggleTagPill(this,newTag.id,newTag.color);};
+    wrap.insertBefore(btn,wrap.lastElementChild);
+  }
+}
+
+function saveNote(noteKey,dateStr,planReading,planDate,isDesktop){
+  const title=document.getElementById('nf-title')?.value?.trim()||'';
+  const book=document.getElementById('nf-book')?.value||'';
+  const chapter=document.getElementById('nf-chapter')?.value||'';
+  const verse=document.getElementById('nf-verse')?.value?.trim()||'';
+  const text=document.getElementById('nf-rte')?.innerHTML||'';
+  const tags=Array.from(document.querySelectorAll('.tag-pill.selected')).map(b=>b.dataset.tag);
+  const attachments=window._currentAttachments||[];
+  const hasContent=text.replace(/<[^>]*>/g,'').trim()||tags.length||book||attachments.length||title;
+  if(!hasContent){showToast('Add some content first');return;}
+  const key=noteKey||dateStr;
+  store.notes[key]={title,book,chapter,verse,text,tags,attachments,planReading,planDate,noteDate:dateStr,updated:new Date().toISOString()};
+  saveStore();
+  showToast('Note saved ✦');
+  backToNotes(isDesktop);
+}
+
+function confirmDelete(noteKey,isDesktop){
+  if(!confirm('Delete this note? This cannot be undone.'))return;
+  delete store.notes[noteKey];
+  saveStore();
+  showToast('Note deleted');
+  backToNotes(isDesktop);
+}
+
+function backToNotes(isDesktop){
+  if(isDesktop){dNoteId=null;renderNotesList('d-page-notes',true);}
+  else{mNoteId=null;renderNotesList('m-page-notes',false);}
+}
+
+// ── RTE ──
+function fmt(cmd){
+  const ed=document.getElementById('nf-rte');if(!ed)return;
+  ed.focus();
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0)return;
+  const range=sel.getRangeAt(0);
+  if(range.collapsed){document.execCommand(cmd,false,null);return;}
+  // Check if already applied and toggle off
+  const tag=cmd==='bold'?['B','STRONG']:cmd==='italic'?['I','EM']:cmd==='underline'?['U']:[];
+  let node=sel.getRangeAt(0).commonAncestorContainer;
+  if(node.nodeType===3)node=node.parentNode;
+  let isActive=false;
+  let check=node;
+  while(check&&check!==ed){if(tag.includes(check.tagName)){isActive=true;break;}check=check.parentNode;}
+  if(isActive){document.execCommand(cmd,false,null);}
+  else{
+    const el=document.createElement(cmd==='bold'?'strong':cmd==='italic'?'em':'u');
+    try{range.surroundContents(el);}
+    catch(e){document.execCommand(cmd,false,null);}
+  }
+}
+function applyHL(color){
+  const ed=document.getElementById('nf-rte');if(!ed)return;
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0||sel.isCollapsed){showToast('Select text first');return;}
+  ed.focus();
+  const range=sel.getRangeAt(0);
+  if(color==='transparent'){
+    // Find all mark elements inside editor and unwrap ones in selection
+    const marks=[...ed.querySelectorAll('mark')];
+    marks.forEach(m=>{
+      if(sel.containsNode(m,true)||range.intersectsNode(m)){
+        const parent=m.parentNode;
+        while(m.firstChild)parent.insertBefore(m.firstChild,m);
+        parent.removeChild(m);
+      }
+    });
+    return;
+  }
+  const mark=document.createElement('mark');
+  mark.style.cssText=`background:${color};border-radius:2px;padding:0 1px;`;
+  try{
+    range.surroundContents(mark);
+  } catch(e){
+    const frag=range.extractContents();
+    mark.appendChild(frag);
+    range.insertNode(mark);
+    const newRange=document.createRange();
+    newRange.setStartAfter(mark);
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  }
+}
+function clearFormatting(){
+  const ed=document.getElementById('nf-rte');if(!ed)return;
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0||sel.isCollapsed){showToast('Select text first');return;}
+  // Unwrap all marks in selection
+  const marks=[...ed.querySelectorAll('mark')];
+  marks.forEach(m=>{
+    const parent=m.parentNode;
+    while(m.firstChild)parent.insertBefore(m.firstChild,m);
+    parent.removeChild(m);
+  });
+  // Remove bold/italic/underline/font spans
+  document.execCommand('removeFormat',false,null);
+}
+function applyFont(font){
+  if(!font)return;
+  const ed=document.getElementById('nf-rte');if(!ed)return;
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0){showToast('Select text first');return;}
+  const range=sel.getRangeAt(0);
+  if(range.collapsed){showToast('Select text first');return;}
+  const span=document.createElement('span');
+  span.style.fontFamily=font;
+  try{range.surroundContents(span);}
+  catch(e){
+    const frag=range.extractContents();
+    span.appendChild(frag);range.insertNode(span);
+  }
+  sel.removeAllRanges();
+}
+
+// ── SEARCH ──
+function renderSearch(containerId,isDesktop){
+  const el=document.getElementById(containerId);if(!el)return;
+  el.innerHTML=`
+    <div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:400;color:var(--ink);margin-bottom:16px">
+        Search <em style="font-style:italic;color:var(--rose)">Notes</em>
+      </h2>
+      <div class="gradient-line"></div>
+      <input class="search-input" id="search-q" placeholder="Search by title, reference, keyword, or tag…" autofocus oninput="doSearch(${isDesktop})">
+      <div id="search-results"></div>
+    </div>`;
+}
+
+function doSearch(isDesktop){
+  const q=(document.getElementById('search-q')?.value||'').trim().toLowerCase();
+  const out=document.getElementById('search-results');if(!out)return;
+  if(!q){out.innerHTML='';return;}
+  const results=Object.entries(store.notes).filter(([k,n])=>
+    (n.title||'').toLowerCase().includes(q)||
+    (n.text||'').toLowerCase().replace(/<[^>]*>/g,'').includes(q)||
+    (n.book||'').toLowerCase().includes(q)||
+    (n.tags||[]).some(t=>t.includes(q))||
+    (n.planReading||'').toLowerCase().includes(q)
+  ).sort((a,b)=>b[0].localeCompare(a[0]));
+  if(!results.length){out.innerHTML=`<div style="font-size:0.8rem;color:var(--ink-lt);font-style:italic">No results found.</div>`;return;}
+  out.innerHTML=results.map(([key,note])=>{
+    const ref=buildRefLabel(note.book,note.chapter,note.verse);
+    const d=new Date((note.noteDate||key)+'T12:00:00');
+    const label=note.title||ref||`${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    const preview=(note.text||'').replace(/<[^>]*>/g,'').slice(0,200);
+    return `<div class="sr-card" onclick="openNote('${key}',${isDesktop})">
+      <div class="sr-title">${esc(label)}</div>
+      ${note.title&&ref?`<div style="font-size:0.7rem;color:var(--ink-lt);margin-bottom:4px">${ref}</div>`:''}
+      <div class="sr-preview">${esc(preview)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── EXPORT / IMPORT ──
+function handleExport(){
+  const b=new Blob([JSON.stringify(store,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`word-reflect-${new Date().toISOString().split('T')[0]}.json`;a.click();
+  showToast('Exported!');
+}
+function handleImport(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{try{store=JSON.parse(ev.target.result);saveStore();renderDPage(dTab);renderMPage(mTab);showToast('Imported ✦');}catch(err){showToast('Could not read file.');}};
+  r.readAsText(f);e.target.value='';
+}
+
+// ── UTILS ──
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ── INIT ──
+loadStore();
+renderDPage('plan');
+renderMPage('plan');
+// Show correct page after load
+if(store.plan){planGenerated=false;}
+</script>
+</body>
+</html>
